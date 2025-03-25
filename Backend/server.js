@@ -11,7 +11,7 @@ import orderRouter from "./routes/orderRoute.js";
 
 // app configurations
 const app = express();
-const port = 4000;
+const port = process.env.PORT || 4000;
 
 //middleware
 app.use(express.json()) // For parsing json files coming to backend
