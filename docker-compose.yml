@@ -1,0 +1,33 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: quickbite-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  stripe-mock:
+    image: stripe/stripe-mock:latest
+    container_name: quickbite-stripe-mock
+    ports:
+      - "12111:12111"
+
+  backend:
+    build:
+      context: ./Backend
+    container_name: quickbite-backend
+    ports:
+      - "4000:4000"
+    environment:
+      MONGO_DBurl: mongodb://mongodb:27017/quickbite
+      STRIPE_SECRET_KEY: http://stripe-mock:12111
+    depends_on:
+      - mongodb
+      - stripe-mock
+    volumes:
+      - ./Backend:/app
+
+volumes:
+  mongo_data:
